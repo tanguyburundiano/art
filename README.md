@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Legal Texts Platform
 
 Django site for internal lawyers to search, filter, copy and consult useful legal texts. Staff users can add, edit and delete parts, sections and articles.
