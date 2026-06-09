@@ -1,0 +1,56 @@
+{% extends 'legaltexts/base.html' %}
+{% block content %}
+<section class="hero">
+    <div>
+        <h1>Staff dashboard</h1>
+        <p>Manage parts, sections and legal articles.</p>
+    </div>
+    <div class="actions">
+        <a class="primary" href="{% url 'part_add' %}">+ Add part</a>
+        <a class="primary" href="{% url 'section_add' %}">+ Add section</a>
+        <a class="primary" href="{% url 'article_add' %}">+ Add article</a>
+    </div>
+</section>
+
+<div class="stats">
+    <div><strong>{{ parts_count }}</strong><span>Parts</span></div>
+    <div><strong>{{ sections_count }}</strong><span>Sections</span></div>
+    <div><strong>{{ articles_count }}</strong><span>Total articles</span></div>
+    <div><strong>{{ active_articles_count }}</strong><span>Active articles</span></div>
+</div>
+
+<h2>Parts / Domains</h2>
+<table>
+    <thead><tr><th>Part</th><th>Articles</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for part in parts %}
+        <tr>
+            <td>{{ part.title }}</td>
+            <td>{{ part.article_count }}</td>
+            <td>
+                <a href="{% url 'part_edit' part.id %}">Edit</a>
+                <a class="danger" href="{% url 'part_delete' part.id %}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<h2>Recently updated articles</h2>
+<table>
+    <thead><tr><th>Article</th><th>Part</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+    {% for article in recent_articles %}
+        <tr>
+            <td>{{ article.title }}</td>
+            <td>{{ article.section.part.title }}</td>
+            <td>{% if article.is_active %}Active{% else %}Inactive{% endif %}</td>
+            <td>
+                <a href="{% url 'article_edit' article.id %}">Edit</a>
+                <a class="danger" href="{% url 'article_delete' article.id %}">Delete</a>
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

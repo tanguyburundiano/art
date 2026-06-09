@@ -1,0 +1,12 @@
+{% extends 'legaltexts/base.html' %}
+{% block content %}
+<div class="auth-card">
+    <h1>Internal lawyer login</h1>
+    <p class="muted">Access reserved for internal lawyers and staff.</p>
+    <form method="post" class="form-card">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="primary" type="submit">Login</button>
+    </form>
+</div>
+{% endblock %}

@@ -1,0 +1,20 @@
+{% extends 'legaltexts/base.html' %}
+{% block content %}
+<article class="detail-card">
+    <div class="badge">{{ article.section.part.title }} / {{ article.section.title }}</div>
+    <h1>{{ article.title }}</h1>
+    {% if article.reference_number %}<p class="muted">Reference: {{ article.reference_number }}</p>{% endif %}
+    <div id="article-copy-{{ article.id }}" class="article-body">
+        
+        <p>{{ article.content|linebreaks }}</p>
+        {% if article.source_link %}<p>Source: {{ article.source_link }}</p>{% endif %}
+    </div>
+    <div class="actions">
+        <button id="copy-btn-{{ article.id }}" onclick="copyArticle('{{ article.id }}')">Copy article</button>
+        {% if user.is_staff %}
+            <a href="{% url 'article_edit' article.id %}">Edit</a>
+            <a class="danger" href="{% url 'article_delete' article.id %}">Delete</a>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends 'legaltexts/base.html' %}
+{% block content %}
+<div class="form-wrapper">
+    <h1>{% if object %}Edit article{% else %}Add article{% endif %}</h1>
+    <form method="post" class="form-card">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="primary" type="submit">Save</button>
+        <a class="secondary" href="javascript:history.back()">Cancel</a>
+    </form>
+</div>
+{% endblock %}
