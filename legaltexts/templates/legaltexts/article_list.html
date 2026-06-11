@@ -10,39 +10,42 @@
 
 <form method="get" class="filters">
     <input type="text" name="q" value="{{ query }}" placeholder="Search by title, keyword, law number...">
+    <select name="sector">
+        <option value="">All sectors</option>
+        {% for sector in sectors %}
+            <option value="{{ sector.id }}" {% if selected_sector == sector.id|stringformat:'s' %}selected{% endif %}>{{ sector.title }}</option>
+        {% endfor %}
+    </select>
     <select name="part">
-        <option value="">All parts/domains</option>
+        <option value="">All parts</option>
         {% for part in parts %}
-            <option value="{{ part.id }}" {% if selected_part == part.id|stringformat:'s' %}selected{% endif %}>{{ part.title }}</option>
+            <option value="{{ part.id }}" {% if selected_part == part.id|stringformat:'s' %}selected{% endif %}>{{ part.sector.title }} / {{ part.title }}</option>
         {% endfor %}
     </select>
-    <select name="section">
-        <option value="">All sections</option>
-        {% for section in sections %}
-            <option value="{{ section.id }}" {% if selected_section == section.id|stringformat:'s' %}selected{% endif %}>{{ section.part.title }} / {{ section.title }}</option>
-        {% endfor %}
-    </select>
-    <button type="submit">Filter</button>
-    <a class="secondary" href="{% url 'article_list' %}">Reset</a>
+    <button type="submit" class="btn btn-primary">Filter</button>
+    <a class="btn btn-secondary" href="{% url 'article_list' %}">Reset</a>
 </form>
 
 <div class="article-grid">
 {% for article in articles %}
     <article class="article-card">
-        <div class="badge">{{ article.section.part.title }}</div>
+        <div class="article-card__header">
+            <span class="badge">{{ article.part.sector.title }}</span>
+            <span class="badge article-card__status {% if article.is_active %}active{% else %}inactive{% endif %}">{{ article.is_active|yesno:"Active,Inactive" }}</span>
+        </div>
+        <p class="article-meta">{{ article.part.title }}{% if article.reference_number %} · {{ article.reference_number }}{% endif %}</p>
         <h2><a href="{{ article.get_absolute_url }}">{{ article.title }}</a></h2>
-        <p class="muted">{{ article.section.title }}{% if article.reference_number %} · {{ article.reference_number }}{% endif %}</p>
         <div id="article-copy-{{ article.id }}" class="copy-text">
 
 {% if article.content %}{{ article.content }}{% endif %}
 {% if article.source_link %}Source: {{ article.source_link }}{% endif %}
         </div>
         <div class="actions">
-            <button id="copy-btn-{{ article.id }}" onclick="copyArticle('{{ article.id }}')">Copy</button>
-            <a class="secondary" href="{{ article.get_absolute_url }}">Open</a>
+            <button type="button" class="btn btn-primary" id="copy-btn-{{ article.id }}" onclick="copyArticle('{{ article.id }}')">Copy</button>
+            <a class="btn btn-secondary" href="{{ article.get_absolute_url }}">Open</a>
             {% if user.is_staff %}
-                <a href="{% url 'article_edit' article.id %}">Edit</a>
-                <a class="danger" href="{% url 'article_delete' article.id %}">Delete</a>
+                <a class="btn btn-secondary" href="{% url 'article_edit' article.id %}">Edit</a>
+                <a class="btn btn-danger" href="{% url 'article_delete' article.id %}">Delete</a>
             {% endif %}
         </div>
     </article>

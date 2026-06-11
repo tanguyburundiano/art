@@ -1,7 +1,7 @@
 {% extends 'legaltexts/base.html' %}
 {% block content %}
 <article class="detail-card">
-    <div class="badge">{{ article.section.part.title }} / {{ article.section.title }}</div>
+    <div class="badge">{{ article.part.sector.title }} / {{ article.part.title }}</div>
     <h1>{{ article.title }}</h1>
     {% if article.reference_number %}<p class="muted">Reference: {{ article.reference_number }}</p>{% endif %}
     <div id="article-copy-{{ article.id }}" class="article-body">

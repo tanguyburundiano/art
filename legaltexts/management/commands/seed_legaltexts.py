@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from legaltexts.models import Part, Section, LegalArticle
+from legaltexts.models import Sector, Part, LegalArticle
 
 DATA = {
     'PROPRIETE INTELLECTUELLE': [
@@ -46,18 +46,19 @@ DATA = {
     ],
 }
 
+
 class Command(BaseCommand):
     help = 'Seed sample legal texts.'
 
     def handle(self, *args, **options):
-        for part_order, (part_title, sections) in enumerate(DATA.items(), start=1):
-            part, _ = Part.objects.get_or_create(title=part_title, defaults={'order': part_order})
-            for section_order, (section_title, articles) in enumerate(sections, start=1):
-                section, _ = Section.objects.get_or_create(part=part, title=section_title, defaults={'order': section_order})
+        for sector_order, (sector_title, parts) in enumerate(DATA.items(), start=1):
+            sector, _ = Sector.objects.get_or_create(title=sector_title, defaults={'order': sector_order})
+            for part_order, (part_title, articles) in enumerate(parts, start=1):
+                part, _ = Part.objects.get_or_create(sector=sector, title=part_title, defaults={'order': part_order})
                 for article_order, title in enumerate(articles, start=1):
                     LegalArticle.objects.get_or_create(
-                        section=section,
+                        part=part,
                         title=title,
-                        defaults={'order': article_order, 'content': title, 'keywords': part_title.lower()},
+                        defaults={'order': article_order, 'content': title, 'keywords': sector_title.lower()},
                     )
         self.stdout.write(self.style.SUCCESS('Sample legal texts created.'))

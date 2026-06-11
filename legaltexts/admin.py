@@ -1,25 +1,29 @@
 from django.contrib import admin
-from .models import Part, Section, LegalArticle
+from .models import Sector, Part, LegalArticle
 
-class SectionInline(admin.TabularInline):
-    model = Section
+
+class PartInline(admin.TabularInline):
+    model = Part
     extra = 1
+
+
+@admin.register(Sector)
+class SectorAdmin(admin.ModelAdmin):
+    list_display = ('title', 'order')
+    search_fields = ('title', 'description')
+    inlines = [PartInline]
+
 
 @admin.register(Part)
 class PartAdmin(admin.ModelAdmin):
-    list_display = ('title', 'order')
-    search_fields = ('title', 'description')
-    inlines = [SectionInline]
+    list_display = ('title', 'sector', 'order')
+    list_filter = ('sector',)
+    search_fields = ('title', 'description', 'sector__title')
 
-@admin.register(Section)
-class SectionAdmin(admin.ModelAdmin):
-    list_display = ('title', 'part', 'order')
-    list_filter = ('part',)
-    search_fields = ('title', 'description', 'part__title')
 
 @admin.register(LegalArticle)
 class LegalArticleAdmin(admin.ModelAdmin):
-    list_display = ('title', 'section', 'is_active', 'updated_at')
-    list_filter = ('is_active', 'section__part', 'section')
+    list_display = ('title', 'part', 'is_active', 'updated_at')
+    list_filter = ('is_active', 'part__sector', 'part')
     search_fields = ('title', 'reference_number', 'content', 'keywords')
     autocomplete_fields = []
