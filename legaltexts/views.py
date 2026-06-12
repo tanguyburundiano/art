@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.core.paginator import Paginator
 from django.db.models import Q, Count
 from django.shortcuts import render
 from django.urls import reverse_lazy
@@ -34,8 +35,14 @@ def article_list(request):
     if part_id:
         articles = articles.filter(part_id=part_id)
 
+    paginator = Paginator(articles, 24)
+    page_number = request.GET.get('page', 1)
+    page_obj = paginator.get_page(page_number)
+
     context = {
-        'articles': articles,
+        'articles': page_obj.object_list,
+        'page_obj': page_obj,
+        'paginator': paginator,
         'sectors': Sector.objects.all(),
         'parts': Part.objects.select_related('sector').all(),
         'selected_sector': sector_id,

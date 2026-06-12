@@ -53,4 +53,24 @@
     <p>No legal article found.</p>
 {% endfor %}
 </div>
+<br><br>
+{% if page_obj.paginator.num_pages > 1 %}
+<nav class="pagination" aria-label="Pagination">
+    <div class="pagination-controls">
+        {% if page_obj.has_previous %}
+            <a class="pagination-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_sector %}&sector={{ selected_sector }}{% endif %}{% if selected_part %}&part={{ selected_part }}{% endif %}">← Previous</a>
+        {% else %}
+            <span class="pagination-link disabled">← Previous</span>
+        {% endif %}
+
+        <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+
+        {% if page_obj.has_next %}
+            <a class="pagination-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if selected_sector %}&sector={{ selected_sector }}{% endif %}{% if selected_part %}&part={{ selected_part }}{% endif %}">Next →</a>
+        {% else %}
+            <span class="pagination-link disabled">Next →</span>
+        {% endif %}
+    </div>
+</nav>
+{% endif %}
 {% endblock %}
